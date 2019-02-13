@@ -1,0 +1,58 @@
+{
+  "name": "babel-plugin-nodejs-module-shim",
+  "version": "0.0.0",
+  "description": "A babel plugin to shim Node.js build-in modules and global objects.",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "lint": "eslint --ignore-path .gitignore lib/ test/",
+    "ci": "nyc report --reporter=text-lcov | coveralls",
+    "pretest": "npm run lint",
+    "test": "nyc --reporter=lcov --reporter=text ava"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.test.js"
+    ],
+    "concurrency": 5
+  },
+  "nyc": {
+    "exclude": [
+      "node_modules",
+      "**/tests"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/offgravity/babel-plugin-nodejs-module-shim.git"
+  },
+  "keywords": [
+    "babel",
+    "plugin",
+    "nodejs",
+    "shim"
+  ],
+  "author": "pigcan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/offgravity/babel-plugin-nodejs-module-shim/issues"
+  },
+  "homepage": "https://github.com/offgravity/babel-plugin-nodejs-module-shim#readme",
+  "dependencies": {
+    "@babel/code-frame": "^7.0.0",
+    "@babel/generator": "^7.3.2",
+    "@babel/parser": "^7.3.2",
+    "@babel/traverse": "^7.2.3",
+    "@babel/types": "^7.3.2",
+    "eslint-plugin-import": "^2.16.0"
+  },
+  "devDependencies": {
+    "ava": "^1.2.1",
+    "coveralls": "^3.0.2",
+    "eslint": "^5.13.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "nyc": "^13.2.0"
+  }
+}
