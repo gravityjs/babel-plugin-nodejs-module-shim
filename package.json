@@ -7,10 +7,10 @@
     "lib": "lib"
   },
   "scripts": {
-    "lint": "eslint --ignore-path .gitignore lib/ test/",
-    "ci": "nyc report --reporter=text-lcov | coveralls",
-    "pretest": "npm run lint",
-    "test": "nyc --reporter=lcov --reporter=text ava"
+    "build": "babel src -d lib",
+    "lint": "eslint --ignore-path .gitignore src/ test/index.js",
+    "test": "jest",
+    "cov": "jest --coverage | coveralls"
   },
   "ava": {
     "files": [
@@ -44,15 +44,23 @@
     "@babel/code-frame": "^7.0.0",
     "@babel/generator": "^7.3.2",
     "@babel/parser": "^7.3.2",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/template": "^7.2.2",
     "@babel/traverse": "^7.2.3",
     "@babel/types": "^7.3.2",
-    "eslint-plugin-import": "^2.16.0"
+    "nodejs-libs-browser": "^0.2.0",
+    "read-pkg-up": "^4.0.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/helper-plugin-test-runner": "^7.1.0",
     "ava": "^1.2.1",
     "coveralls": "^3.0.2",
     "eslint": "^5.13.0",
     "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "jest": "^24.1.0",
     "nyc": "^13.2.0"
   }
 }
