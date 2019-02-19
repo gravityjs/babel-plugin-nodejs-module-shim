@@ -7,6 +7,7 @@ const { dirname } = require('path');
 const t = require('@babel/types');
 const template = require('@babel/template');
 const nodejsLibsBrowser = require('nodejs-libs-browser');
+const slash = require('slash');
 
 const { patchPackageJson } = require('./util');
 
@@ -60,12 +61,12 @@ function shimGlobal(path, state) {
         node.body.unshift(patchGlobalObjectAsAlias({
           GLOBALNAME: t.identifier('buffer'),
           GLOBALALIASNAME: t.identifier('Buffer'),
-          GLOBALVALUE: t.stringLiteral(nodejsLibsBrowser[v]),
+          GLOBALVALUE: t.stringLiteral(slash(nodejsLibsBrowser[v])),
         }));
 
         return;
       }
-      const value = nodejsLibsBrowser[v];
+      const value = slash(nodejsLibsBrowser[v]);
       node.body.unshift(patchGlobalObject({
         GLOBALNAME: t.identifier(v),
         GLOBALVALUE: t.stringLiteral(value),
@@ -109,13 +110,13 @@ function shimModule(t, path, state) {
     && parent.callee.name === 'require'
     && !parentPath.scope.hasBinding('require')
   ) {
-    node.value = nodejsLibsBrowser[node.value];
+    node.value = slash(nodejsLibsBrowser[node.value]);
     return;
   }
   // s2. import util from 'util'
   // import
   if (t.isImportDeclaration(parent)) {
-    node.value = nodejsLibsBrowser[node.value];
+    node.value = slash(nodejsLibsBrowser[node.value]);
   }
 }
 
