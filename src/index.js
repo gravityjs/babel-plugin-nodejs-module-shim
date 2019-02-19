@@ -1,12 +1,12 @@
 const { dirname } = require('path');
 
-const codeFrame = require('@babel/code-frame');
-const generator = require('@babel/generator');
-const parser = require('@babel/parser');
-const traverse = require('@babel/traverse');
+// const codeFrame = require('@babel/code-frame');
+// const generator = require('@babel/generator');
+// const parser = require('@babel/parser');
+// const traverse = require('@babel/traverse');
 const t = require('@babel/types');
 const template = require('@babel/template');
-const nodejsLibsBrowser = require("nodejs-libs-browser");
+const nodejsLibsBrowser = require('nodejs-libs-browser');
 
 const { patchPackageJson } = require('./util');
 
@@ -14,16 +14,16 @@ const nodeModuleNameList = [
   'assert', 'buffer', 'child_process', 'cluster', 'console', 'constants', 'crypto', 'dgram', 'dns', 'domain', 'events', 'fs',
   'http', 'https', 'module', 'net', 'os', 'path', 'punycode', 'process', 'querystring', 'readline', 'repl', 'stream', '_stream_duplex',
   '_stream_passthrough', '_stream_readable', '_stream_transform', '_stream_writable', 'string_decoder', 'sys', 'timers', 'tls', 'tty',
-  'url', 'util', 'vm', 'zlib'
+  'url', 'util', 'vm', 'zlib',
 ];
 
 // todo support global console
 const nodeGlobalObjectList = [
-  'process', 'Buffer', 'buffer'
+  'process', 'Buffer', 'buffer',
 ];
 
 const nodeGlobalVariableList = [
-  '__dirname', '__filename'
+  '__dirname', '__filename',
 ];
 
 const patchGlobalObjectAsAlias = template.default`
@@ -38,10 +38,17 @@ const patchGlobalVariable = template.default`
   var VARIABLENAME = VARIABLEVALUE;
 `;
 
+function shimGlobalObject(globals) {
+  return Object.keys(globals).filter(i => nodeGlobalObjectList.indexOf(i) > -1);
+}
+
+function shimGlobalVariable(globals) {
+  return Object.keys(globals).filter(i => nodeGlobalVariableList.indexOf(i) > -1);
+}
 
 function shimGlobal(path, state) {
   const { node } = path;
-  const globals = path.scope.globals;
+  const { globals } = path.scope;
   if (!Object.keys(globals).length) {
     return;
   }
@@ -87,14 +94,6 @@ function shimGlobal(path, state) {
   }
 }
 
-function shimGlobalObject(globals) {
-  return Object.keys(globals).filter((i) => nodeGlobalObjectList.indexOf(i) > - 1);
-}
-
-function shimGlobalVariable(globals) {
-  return Object.keys(globals).filter((i) => nodeGlobalVariableList.indexOf(i) > - 1);
-}
-
 function shimModule(t, path, state) {
   const { node, parent, parentPath } = path;
   // filter nodejs buildin module
@@ -120,13 +119,13 @@ function shimModule(t, path, state) {
   }
 }
 
-export default function({ types: t }) {
+export default function ({ types: t }) {
   return {
     visitor: {
       Program: {
-        enter(path, state) {
-          // todo custom opts - e.x. mock empty
-        },
+        // enter(path, state) {
+        //   // todo custom opts - e.x. mock empty
+        // },
         exit(path, state) {
           shimGlobal(path, state);
         },
@@ -134,6 +133,6 @@ export default function({ types: t }) {
       StringLiteral(path, state) {
         shimModule(t, path, state);
       },
-    }
+    },
   };
 }
