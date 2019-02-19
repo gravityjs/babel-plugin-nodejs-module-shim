@@ -9,8 +9,8 @@
   "scripts": {
     "build": "babel src -d lib",
     "lint": "eslint --ignore-path .gitignore src/ test/index.js",
-    "test": "jest",
-    "cov": "jest --coverage | coveralls"
+    "test": "npm run build && jest",
+    "cov": "npm run build && jest --coverage | coveralls"
   },
   "ava": {
     "files": [
