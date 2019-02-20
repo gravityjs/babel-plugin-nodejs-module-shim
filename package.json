@@ -48,7 +48,7 @@
     "@babel/template": "^7.2.2",
     "@babel/traverse": "^7.2.3",
     "@babel/types": "^7.3.2",
-    "nodejs-libs-browser": "^0.2.0",
+    "nodejs-libs-browser": "^0.3.0",
     "read-pkg-up": "^4.0.0",
     "slash": "^2.0.0"
   },
@@ -56,12 +56,10 @@
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@babel/helper-plugin-test-runner": "^7.1.0",
-    "ava": "^1.2.1",
     "coveralls": "^3.0.2",
     "eslint": "^5.13.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.16.0",
-    "jest": "^24.1.0",
-    "nyc": "^13.2.0"
+    "jest": "^24.1.0"
   }
 }

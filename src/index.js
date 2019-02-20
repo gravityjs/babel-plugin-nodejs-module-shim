@@ -6,8 +6,10 @@ const { dirname } = require('path');
 // const traverse = require('@babel/traverse');
 const t = require('@babel/types');
 const template = require('@babel/template');
-const nodejsLibsBrowser = require('nodejs-libs-browser');
+const getNodejsLibsBrowser = require('nodejs-libs-browser');
 const slash = require('slash');
+
+let nodejsLibsBrowser = null;
 
 const { patchPackageJson } = require('./util');
 
@@ -120,13 +122,19 @@ function shimModule(t, path, state) {
   }
 }
 
-export default function ({ types: t }) {
+export default function ({ types: t }, options) {
+  let shimOpts = {
+    prefix: '',
+  };
+  if (typeof options === 'object' && typeof options.prefix === 'string') {
+    shimOpts = Object.assign(shimOpts, { prefix: options.prefix });
+  }
+
+  nodejsLibsBrowser = getNodejsLibsBrowser(shimOpts.prefix);
+
   return {
     visitor: {
       Program: {
-        // enter(path, state) {
-        //   // todo custom opts - e.x. mock empty
-        // },
         exit(path, state) {
           shimGlobal(path, state);
         },

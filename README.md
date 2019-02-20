@@ -49,7 +49,24 @@ Via `.babelrc` or babel-loader.
 }
 ```
 
+
 ## Options
 
-todo
+| Option             | Defaults | Description                                                                                                                                                                                                                              |
+| ------------------ | :------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| prefix |  ''   | prefix + shimModulePath. See example below. |                                                                                                                     |
 
+## More examples
+
+`["nodejs-module-shim", { prefix: 'PREFIX' }]`
+
+```javascript
+process;
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+    
+var process = require("PREFIX<CWD>/process/browser.js");
+
+process;
+
+```
