@@ -62,17 +62,17 @@ function shimGlobal(path, state) {
       const value = slash(nodejsLibsBrowser[v]);
       if (v === 'buffer' || v === 'Buffer') {
         node.body.unshift(patchGlobalObjectAsAlias({
-          GLOBALNAME: t.identifier('buffer'),  
+          GLOBALNAME: t.identifier('buffer'),
           GLOBALALIASNAME: t.identifier('Buffer'),
         }));
         node.body.unshift(patchGlobalObject({
           GLOBALNAME: t.identifier('buffer'),
           GLOBALVALUE: t.stringLiteral(value),
-        }))
+        }));
 
         return;
       }
-  
+
       node.body.unshift(patchGlobalObject({
         GLOBALNAME: t.identifier(v),
         GLOBALVALUE: t.stringLiteral(value),
