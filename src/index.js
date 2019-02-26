@@ -106,6 +106,12 @@ function shimModule(t, path, state) {
   // filter nodejs buildin module
   if (nodeModuleNameList.indexOf(node.value) < 0) return;
 
+  // filter no shim buildin module
+  if (nodejsLibsBrowser[node.value] === null) {
+    throw new Error(`${node.value} is not support in browser.`);
+    return;
+  }
+
   // filter module that be specified in pkg
   if (!patchPackageJson(state.file.opts.filename, node.value)) return;
 
