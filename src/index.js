@@ -37,6 +37,10 @@ const patchGlobalObject = template.default`
   var GLOBALNAME = require(GLOBALVALUE);
 `;
 
+const patchGlobalObjectMember = template.default`
+  var GLOBALNAME = require(GLOBALVALUE)['MEMBERNAME'];
+`;
+
 const patchGlobalVariable = template.default`
   var VARIABLENAME = VARIABLEVALUE;
 `;
@@ -65,9 +69,10 @@ function shimGlobal(path, state) {
           GLOBALNAME: t.identifier('buffer'),
           GLOBALALIASNAME: t.identifier('Buffer'),
         }));
-        node.body.unshift(patchGlobalObject({
+        node.body.unshift(patchGlobalObjectMember({
           GLOBALNAME: t.identifier('buffer'),
           GLOBALVALUE: t.stringLiteral(value),
+          MEMBERNAME: t.stringLiteral('Buffer'),
         }));
 
         return;
