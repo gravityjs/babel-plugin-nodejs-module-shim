@@ -48,7 +48,7 @@
     "@babel/template": "^7.2.2",
     "@babel/traverse": "^7.2.3",
     "@babel/types": "^7.3.2",
-    "nodejs-libs-browser": "^0.3.0",
+    "nodejs-libs-browser": "^0.4.0",
     "read-pkg-up": "^4.0.0",
     "slash": "^2.0.0"
   },

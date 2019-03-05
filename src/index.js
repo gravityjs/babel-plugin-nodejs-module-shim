@@ -106,7 +106,7 @@ function shimGlobal(path, state) {
   }
 }
 
-function shimModule(t, path, state) {
+function shimModule(t, path, state, shimOpts) {
   const { node, parent, parentPath } = path;
   // filter nodejs buildin module
   if (nodeModuleNameList.indexOf(node.value) < 0) return;
@@ -115,13 +115,21 @@ function shimModule(t, path, state) {
   if (nodejsLibsBrowser[node.value] === null) {
     if (
       (
-        t.isCallExpression(parent)
-        && parent.callee.name === 'require'
-        && !parentPath.scope.hasBinding('require')
-      ) || t.isImportDeclaration(parent)
+        (
+          t.isCallExpression(parent) && parent.callee.name === 'require' && !parentPath.scope.hasBinding('require')
+        )
+      || t.isImportDeclaration(parent)
+      )
+      && patchPackageJson(state.file.opts.filename, node.value)
     ) {
+      if (shimOpts.empty.indexOf(node.value) > -1) {
+        node.value = slash(nodejsLibsBrowser.empty);
+
+        return;
+      }
       throw new Error(`${node.value} is not support in browser.`);
     }
+
     return;
   }
 
@@ -148,9 +156,21 @@ function shimModule(t, path, state) {
 export default function ({ types: t }, options) {
   let shimOpts = {
     prefix: '',
+    empty: [],
   };
-  if (typeof options === 'object' && typeof options.prefix === 'string') {
-    shimOpts = Object.assign(shimOpts, { prefix: options.prefix });
+  if (typeof options === 'object') {
+    if (typeof options.prefix === 'string') {
+      shimOpts = Object.assign(shimOpts, { prefix: options.prefix });
+    }
+    if (options.empty) {
+      if (typeof options.empty === 'string') {
+        shimOpts.empty = [options.empty];
+      } else if (Array.isArray(options.empty)) {
+        shimOpts.empty = options.empty;
+      } else {
+        throw new Error('empty should be an array with unpollyfilled module names');
+      }
+    }
   }
 
   nodejsLibsBrowser = getNodejsLibsBrowser(shimOpts.prefix);
@@ -163,7 +183,7 @@ export default function ({ types: t }, options) {
         },
       },
       StringLiteral(path, state) {
-        shimModule(t, path, state);
+        shimModule(t, path, state, shimOpts);
       },
     },
   };

@@ -4,6 +4,6 @@ const pluginPath = path.resolve(process.cwd(), 'lib/index.js');
 
 module.exports = {
   plugins: [
-    [path.relative(__dirname, pluginPath), { prefix: 'PREFIX' }],
+    [path.relative(__dirname, pluginPath), { empty: ['fs'] }],
   ],
 };
